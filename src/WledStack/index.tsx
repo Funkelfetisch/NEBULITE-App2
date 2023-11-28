@@ -8,7 +8,7 @@
  * @format
  */
 
-import React from 'react';
+import * as React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import DeviceList from '../screens/DeviceList';
 import {createStackNavigator, StackScreenProps} from '@react-navigation/stack';
