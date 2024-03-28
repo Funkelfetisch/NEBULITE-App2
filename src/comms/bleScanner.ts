@@ -1,7 +1,9 @@
 import Device from './Device';
 import BleManager from 'react-native-ble-manager';
 import {BleManagerModule} from './BleManagerModule';
-import {BleDevice} from './BleDevice';
+import {BleWLEDDevice} from './BleWLEDDevice';
+import { BleZenggeDevice } from './BLEZenggeDevice';
+import {requestBluetoothAndLocationPermissions} from './BlePermissionRequester';
 
 export const bleManagerEmitter = new BleManagerModule();
 
@@ -12,15 +14,29 @@ export const scanForDevices = async (
   bleManagerEmitter.removeAllSubscription();
 
   bleManagerEmitter.addListener('BleManagerDiscoverPeripheral', peripheral => {
+    // console.log('Discovered', peripheral);
+    
     if (
-      peripheral.name === 'WLED BLE2JSON' &&
+      peripheral.name && peripheral.name === 'WLED BLE2JSON' &&
       !devicesFound.includes(peripheral.id)
     ) {
       devicesFound.push(peripheral.id);
-      const device = new BleDevice(peripheral);
+      const device = new BleWLEDDevice(peripheral);
       addDevice(device);
       device.connect();
     }
+
+    if (
+      peripheral.name && peripheral.name.startsWith('LEDnetWF') &&
+      !devicesFound.includes(peripheral.id)
+    ) {
+      devicesFound.push(peripheral.id);
+      const device = new BleZenggeDevice(peripheral);
+      addDevice(device);
+      // device.connectAndSetup();
+    }
+
+
   });
 
   bleManagerEmitter.addListener('BleManagerStopScan', () => {
@@ -31,6 +47,19 @@ export const scanForDevices = async (
     // TODO
     console.log('BleManagerDisconnectPeripheral');
   });
+
+  await requestBluetoothAndLocationPermissions();
+
+  BleManager.enableBluetooth()
+  .then(() => {
+    // Success code
+    console.log("The bluetooth is already enabled or the user confirm");
+  })
+  .catch((error) => {
+    // Failure code
+    console.log("The user refuse to enable bluetooth");
+  });
+
 
   console.log('starting scan');
 

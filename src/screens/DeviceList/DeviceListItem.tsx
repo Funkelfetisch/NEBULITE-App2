@@ -31,6 +31,9 @@ const DeviceListItem: React.FC<DeviceListItemProps> = ({item, navigation}) => {
     if (item.isConnected()) {
       setDevice(item);
       navigation.navigate('Device');
+    } else {
+      item.connect();
+
     }
   };
 

@@ -13,7 +13,7 @@ interface Request {
   endpoint: bleConsts.Endpoint;
 }
 
-export class BleDevice extends Device {
+export class BleWLEDDevice extends Device {
   id: string = '';
   outstandingRequestMap: Record<string, Request> = {};
   connected: boolean = false;

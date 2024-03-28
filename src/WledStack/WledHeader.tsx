@@ -34,7 +34,7 @@ const WledHeader: React.FC<StackHeaderProps> = ({navigation, back}) => {
         />
       </TouchableOpacity>
       <Image
-        source={require('../images/wled_logo.png')}
+        source={require('../images/NEBULITE_white.svg')}
         style={{
           alignSelf: 'center',
           height: 40,
